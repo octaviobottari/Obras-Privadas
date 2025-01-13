@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Global CSS reset */
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Styles for message list and alert message */
+    .alert.fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .messages {
+        padding: 15px;
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .message {
+        padding: 10px 15px;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .message-success {
+        background-color: #dff0d8;
+        color: #468847;
+        border: 1px solid #d6e9c6;
+    }
+
+    .message-error {
+        background-color: #f2dede;
+        color: #a94442;
+        border: 1px solid #eed3d7;
+    }
+
+    .message-info {
+        background-color: #d9edf7;
+        color: #3a87ad;
+        border: 1px solid #bcc7d1;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .alert-success {
+        background-color: #dff0d8;
+        color: #468847;
+        border-color: #d6e9c6;
+    }
+
+    .alert-heading {
+        margin-top: 0;
+    }
+
+    .mb-0 {
+        margin-bottom: 0;
+    }
+
+    .banner {
+        position: relative;
+        background-image: url('/images/background.png'); /* Adjust path as per your static files setup */
+        background-size: cover;
+        background-position: center;
+        padding: 50px 20px;
+        text-align: center;
+        color: white;
+    }
+
+    .banner h2 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: bold;
+        text-shadow: 0 2px 2px rgba(0, 0, 0, .5);
+    }
+
+    .filter-tabs-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filter-tabs {
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+    }
+
+    .filter-tabs button {
+        background-color: transparent;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #333;
+        border-bottom: 3px solid transparent;
+        transition: color 0.3s, border-bottom 0.3s;
+    }
+
+    .filter-tabs button.active {
+        color: #0056b3;
+        border-bottom: 3px solid #0056b3;
+    }
+
+    .province-list {
+        display: none;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .province-list a {
+        margin-right: 15px;
+        color: #0056b3;
+        text-decoration: none;
+    }
+
+    .province-list a:hover {
+        text-decoration: underline;
+    }
+
+    .propuestas-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .propuesta-item {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin: 10px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .propuesta-item.visible {
+        opacity: 1;
+    }
+
+    .propuesta-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .propuesta-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .propuesta-description {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .propuesta-province {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .title-container {
+        margin-left: 20px;
+    }
+
+    .primary {
+        color: #41B8D5;
+        background-color: #cce5ff;
+        border: 3px solid #b8daff;
+    }
+
+    .province-list a {
+        text-decoration: none;
+    }
+
+    .propuesta-title a {
+        text-decoration: none;
+        color: inherit; /* Use the original text color */
+    }
+
+    .propuesta-image {
+        transition: background-color 0.3s ease, opacity 0.3s ease;
+    }
+
+    .propuesta-image:hover {
+        background-color: rgba(255, 255, 255, 0.7);
+        opacity: 0.7;
+    }
+
+    .hover-color:hover {
+        color: #AAAAAA;
+        transition: color 0.3s ease, opacity 0.3s ease;
+    }
+</style>
+
+<div class="banner">
+    <h2>Llamado a Licitación</h2>
+</div>
+
+<div id="propuestas-content" class="propuestas-container">
+    {% for propuesta in propuestas %}
+        <div class="propuesta-item visible">
+            <h3 class="propuesta-title hover-color">
+                <a href="{% url 'propuesta_detail' propuesta.pk %}" style="text-decoration: none;">{{ propuesta.TITULO }}
+            </h3>
+            {% if propuesta.FOTO_DE_PERFIL_DEL_PROYECTO %}
+                <img src="{{ propuesta.FOTO_DE_PERFIL_DEL_PROYECTO.url }}" alt="Profile Picture" class="propuesta-image"></a>
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <p class="propuesta-description">{{ propuesta.IDEA }}</p>
+            <p class="propuesta-province">{{ propuesta.PROVINCIA }}</p>
+            <p class="propuesta-votes">Votos positivos: {{ propuesta.votos_positivos }}</p>
+            <p class="propuesta-votes">Votos negativos: {{ propuesta.votos_negativos }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% if messages %}
+<div class="alert alert-success">
+    <h4 class="alert-heading">Alert:</h4>
+    <ul class="message-list">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+{% endblock %}

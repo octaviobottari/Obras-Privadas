@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Global CSS reset */
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Styles for message list and alert message */
+    .alert.fade-out {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .messages {
+        padding: 15px;
+        margin-bottom: 20px;
+        list-style: none;
+    }
+
+    .message {
+        padding: 10px 15px;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .message-success {
+        background-color: #dff0d8;
+        color: #468847;
+        border: 1px solid #d6e9c6;
+    }
+
+    .message-error {
+        background-color: #f2dede;
+        color: #a94442;
+        border: 1px solid #eed3d7;
+    }
+
+    .message-info {
+        background-color: #d9edf7;
+        color: #3a87ad;
+        border: 1px solid #bcc7d1;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .alert-success {
+        background-color: #dff0d8;
+        color: #468847;
+        border-color: #d6e9c6;
+    }
+
+    .alert-heading {
+        margin-top: 0;
+    }
+
+    .mb-0 {
+        margin-bottom: 0;
+    }
+
+    .banner {
+        position: relative;
+        background-image: url('/images/background.png'); /* Adjust path as per your static files setup */
+        background-size: cover;
+        background-position: center;
+        padding: 50px 20px;
+        text-align: center;
+        color: white;
+    }
+
+    .banner h2 {
+        margin: 0;
+        font-size: 36px;
+    }
+
+    .filter-tabs-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filter-tabs {
+        display: flex;
+        justify-content: center;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+    }
+
+    .filter-tabs button {
+        background-color: transparent;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        color: #333;
+        border-bottom: 3px solid transparent;
+        transition: color 0.3s, border-bottom 0.3s;
+    }
+
+    .filter-tabs button.active {
+        color: #0056b3;
+        border-bottom: 3px solid #0056b3;
+    }
+
+    .province-list {
+        display: none;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .province-list a {
+        margin-right: 15px;
+        color: #0056b3;
+        text-decoration: none;
+    }
+
+    .province-list a:hover {
+        text-decoration: underline;
+    }
+
+    .propuestas-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .propuesta-item {
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        border: 1px solid #ccc;
+        border-radius: 9px;
+        margin: 20px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+   
+    .propuesta-item.visible {
+        opacity: 1;
+    }
+
+
+    .propuesta-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+
+        
+
+    }
+
+    .propuesta-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        font-family: 'Lora', serif;
+        font-weight: bold;
+    }
+
+    .propuesta-description {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+
+    .propuesta-province {
+        font-size: 14px;
+        color: #777;
+    }
+    
+
+    .title-container {
+        margin-left: 20px;
+    }
+
+    .primary {
+        color: #41B8D5;
+        background-color: #cce5ff;
+        border: 3px solid #b8daff;
+    }
+    
+
+    
+
+    .province-list a {
+        text-decoration: none;
+    }
+
+    .province-list  a:after{
+        content: "|";
+        color: #000;
+        padding-left: 15px;
+}
+
+    .propuesta-title a {
+        text-decoration: none;
+        color: inherit; /* Use the original text color */
+    }
+
+    .propuesta-image {
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    }
+
+    .propuesta-image:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    opacity: 0.7;
+    }
+
+    .hover-color:hover {
+            color: #AAAAAA;
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+
+.vote-options [type="radio"] {
+    position: relative;
+    top: 1.8px; /* Adjust the value as needed */
+}
+
+</style>
+
+<div class="banner">
+    <h2>Propuestas: Declaración de Interés Público</h2>
+</div>
+
+<div class="filter-tabs-container">
+    <div class="filter-tabs">
+        <button id="todos-btn" class="tab-btn hover-color">TODOS</button>
+        <button id="provincias-btn" class="tab-btn hover-color">PROVINCIAS</button>
+    </div>
+</div>
+
+<div id="todos-content" style="text-align: center;">
+    <p>TODAS LAS PROPUESTAS</p>
+</div>
+
+<div id="provincias-content" class="province-list">
+    <a href="?provincia=Buenos%20Aires" class="hover-color">Buenos Aires</a> 
+    <a href="?provincia=Ciudad%20Autónoma%20de%20Buenos%20Aires" class="hover-color">Ciudad Autónoma de Buenos Aires</a> 
+    <a href="?provincia=Catamarca" class="hover-color">Catamarca</a> 
+    <a href="?provincia=Chaco" class="hover-color">Chaco</a> 
+    <a href="?provincia=Chubut" class="hover-color">Chubut</a> 
+    <a href="?provincia=Córdoba" class="hover-color">Córdoba</a> 
+    <a href="?provincia=Corrientes" class="hover-color">Corrientes</a> 
+    <a href="?provincia=Entre%20Ríos" class="hover-color">Entre Ríos</a> 
+    <a href="?provincia=Formosa" class="hover-color">Formosa</a> 
+    <a href="?provincia=Jujuy" class="hover-color">Jujuy</a> 
+    <a href="?provincia=La%20Pampa" class="hover-color">La Pampa</a> 
+    <a href="?provincia=La%20Rioja" class="hover-color">La Rioja</a> 
+    <a href="?provincia=Mendoza" class="hover-color">Mendoza</a> 
+    <a href="?provincia=Misiones" class="hover-color">Misiones</a> 
+    <a href="?provincia=Neuquén" class="hover-color">Neuquén</a> 
+    <a href="?provincia=Río%20Negro" class="hover-color">Río Negro</a> 
+    <a href="?provincia=Salta" class="hover-color">Salta</a> 
+    <a href="?provincia=San%20Juan" class="hover-color">San Juan</a> 
+    <a href="?provincia=San%20Luis" class="hover-color">San Luis</a> 
+    <a href="?provincia=Santa%20Cruz" class="hover-color">Santa Cruz</a> 
+    <a href="?provincia=Santa%20Fe" class="hover-color">Santa Fe</a> 
+    <a href="?provincia=Santiago%20del%20Estero" class="hover-color">Santiago del Estero</a> 
+    <a href="?provincia=Tierra%20del%20Fuego" class="hover-color">Tierra del Fuego</a> 
+    <a href="?provincia=Tucumán" class="hover-color">Tucumán</a>
+</div>
+
+<div id="propuestas-content" class="propuestas-container">
+    {% for propuesta in propuestas %}
+    <div class="propuesta-item visible">
+        <a href="{% url 'propuesta_detail' propuesta.pk %}">
+        <img src="{{ propuesta.FOTO_DE_PERFIL_DEL_PROYECTO.url }}" alt="Profile Picture" class="propuesta-image"></a>
+        <a href="{% url 'propuesta_detail' propuesta.pk %}" class="propuesta-title hover-color" style="text-decoration: none;">{{ propuesta.TITULO }}</a>
+        <p class="propuesta-description">{{ propuesta.IDEA|truncatechars:100 }}</p>
+        <p class="propuesta-province">{{ propuesta.PROVINCIA }}</p>
+
+        {% if propuesta.ya_rateado %}
+        <p>Ya votaste esta propuesta</p>
+        {% else %}
+        <form method="post" action="{% url 'rate_propuesta' propuesta.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="provincia" value="{{ request.GET.provincia }}">
+            
+            <div class="vote-options">
+                <label for="voto-positivo">Positivo:</label>
+                <input type="radio" id="voto-positivo" name="voto" value="+">
+                
+                <label for="voto-negativo">Negativo:</label>
+                <input type="radio" id="voto-negativo" name="voto" value="-">
+            </div>
+            
+            <button type="submit" id="btn-mi-argentina" class="btn btn-primary hidden-xs">Votar propuesta</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<main>
+    {% if messages %}
+    <div id="js-alert" class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Message</h4>
+        <ul class="message-list">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+</main>
+
+<script>
+window.addEventListener("DOMContentLoaded", function() {
+    try {
+        const alertElement = document.querySelector("main .alert.alert-success");
+        if (alertElement) {
+            const closeButton = alertElement.querySelector(".close");
+            const body = document.body;
+            const windowHeight = window.innerHeight;
+            const alertHeight = alertElement.offsetHeight;
+            const topPosition = (windowHeight - alertHeight) / 2;
+
+            alertElement.style.position = "fixed";
+            alertElement.style.top = `${topPosition}px`;
+            alertElement.style.left = "50%";
+            alertElement.style.transform = "translateX(-50%)";
+            alertElement.style.transition = "opacity 0.3s ease-in-out";
+
+            closeButton.addEventListener("click", function() {
+                alertElement.classList.add("fade-out");
+            });
+
+            body.appendChild(alertElement);
+        }
+    } catch (error) {
+        console.error("Error with alert positioning:", error);
+    }
+});
+</script>
+
+<script>
+// JavaScript for switching tabs and fetching propuestas
+document.getElementById('todos-btn').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('provincias-btn').classList.remove('active');
+    document.getElementById('todos-content').style.display = 'block';
+    document.getElementById('provincias-content').style.display = 'none';
+    document.getElementById('provincias-content').style.opacity = 0;
+
+    history.pushState(null, '', `/propuestas/`);
+
+    fetchPropuestas('/propuestas/');
+});
+
+document.getElementById('provincias-btn').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('todos-btn').classList.remove('active');
+    document.getElementById('todos-content').style.display = 'none';
+    document.getElementById('provincias-content').style.display = 'flex';
+    setTimeout(function() {
+        document.getElementById('provincias-content').style.opacity = 1;
+    }, 10);
+});
+
+function fetchPropuestas(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newPropuestas = doc.querySelectorAll('.propuesta-item');
+            const propuestasContent = document.getElementById('propuestas-content');
+            propuestasContent.innerHTML = '';
+            newPropuestas.forEach(function(item, index) {
+                propuestasContent.appendChild(item);
+                setTimeout(function() {
+                    item.classList.add('visible');
+                }, index * 100);
+            });
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const provincia = urlParams.get('provincia');
+    console.log('Provincia:', provincia);
+
+    if (provincia) {
+        document.getElementById('provincias-btn').click();
+        fetchPropuestas(`/propuestas/?provincia=${encodeURIComponent(provincia)}`);
+    } else {
+        document.getElementById('todos-btn').click();
+        fetchPropuestas('/propuestas/');
+    }
+});
+
+// JavaScript for propuesta detail page transition
+const propuestaItems = document.querySelectorAll('.propuesta-item');
+propuestaItems.forEach(item => {
+    item.addEventListener('click', function() {
+        const propuestaId = this.getAttribute('data-propuesta-id');
+        window.location.href = `/propuesta_detail/${propuestaId}`;
+    });
+});
+</script>
+
+{% endblock %}

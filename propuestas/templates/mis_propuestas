@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mis Propuestas</title>
+</head>
+<body>
+    <h2>Mis Propuestas</h2>
+    <ul>
+        {% for propuesta in proposals %}
+        <li>
+            <h3>{{ propuesta.TITULO }}</h3>
+            <p>{{ propuesta.IDEA }}</p>
+            <a href="{% url 'edit_propuesta' propuesta.pk %}">Editar</a>
+            <a href="{% url 'propuesta_detail' propuesta.pk %}">Ver detalles</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+{% endblock %}

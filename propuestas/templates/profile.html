@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+
+    <!-- Update Email Form -->
+    <h2>Update Email</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ email_form.as_p }}
+        <button type="submit" name="email_update">Update Email</button>
+    </form>
+
+    <!-- Update Password Form -->
+    <h2>Update Password</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit" name="password_update">Update Password</button>
+    </form>
+
+    <!-- User Propuestas -->
+    <h2>Your Proposals</h2>
+    <ul>
+        <h2>Tus Propuestas</h2>
+  <ul>
+    {% for propuesta in user_proposals %}
+      <li>
+        <h3>{{ propuesta.TITULO }}</h3>
+        {% if propuesta.FOTO_DE_PERFIL_DEL_PROYECTO %}
+          <img src="{{ propuesta.FOTO_DE_PERFIL_DEL_PROYECTO.url }}" alt="{{ propuesta.TITULO }}" style="max-width: 200px;">
+        {% endif %}
+        <p>Votos Positivos: {{ propuesta.votos_positivos }}</p>
+        <p>Votos Negativos: {{ propuesta.votos_negativos }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+
+</body>
+</html>
+{% endblock %}

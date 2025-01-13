@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Ingresar - Plataforma
+{% endblock %}
+
+{% block content %}
+<head>
+<style>
+    .label {
+    font-weight: 600;
+    color: #707070 ;
+    margin-bottom: 10px;
+    font-size: .88em;
+}
+</style>
+
+</head>
+<main role="main">
+    <section>
+        <div class="container">
+            <div class="row m-b-2">
+                <div class="col-md-6 col-md-offset-3">
+                    <h4 class="activities-sidbar">Ingresá a la plataforma con Mi Argentina o como Empresa</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    {% if form.errors %}
+                    <div id="errores" aria-live="polite" class="alert alert-danger">
+                        <h5>Se han producido los siguientes errores:</h5>
+                        <ol>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-10 form-group item-form">
+                                <label for="{{ form.username.id_for_label }}">Usuario</label>
+                                {{ form.username }}
+                                {% if form.username.errors %}
+                                <p class="help-block error">{{ form.username.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10 form-group item-form">
+                                <label for="{{ form.password.id_for_label }}">Contraseña</label>
+                                {{ form.password }}
+                                {% if form.password.errors %}
+                                <p class="help-block error">{{ form.password.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="submit" class="btn btn-success">INGRESAR</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10">
+                                <hr>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p><a href="" >Recuperar mi contraseña</a></p>
+                            <p><a href="">Crear una nueva cuenta para ingresar</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

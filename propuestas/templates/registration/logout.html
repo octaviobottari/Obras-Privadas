@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Logout</h1>
+        <p>You have been successfully logged out.</p>
+        <p><a href="{% url 'login' %}">Login again</a></p>
+        <!-- Optionally, add more content or links as needed -->
+    </div>
+{% endblock %}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Obras Privadas{% endblock %}</title>
+
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kTcVAP1U1dO6b+M+NU6lSb4Qv9IM2ns+12kqFIFRHSfMwiP2+8bMyJAl2PsKGga0qOdbtK8BrJDg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/argob/poncho@master/dist/css/encode-fontface.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/argob/poncho@master/dist/css/poncho.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/argob/poncho@master/dist/css/documentacion.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/argob/poncho@master/dist/css/icono-arg.css" rel="stylesheet">
+
+    <style>
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #003366;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #fff;
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #e7ba61;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+        }
+
+        .navbar-top {
+            border-bottom: 3px solid #e7ba61;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+        }
+
+        .btn-mi-argentina {
+            background-color: #003366;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-mi-argentina:hover {
+            background-color: #001726;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+
+        .sub-footer {
+            background-color: #0072b8;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .border-top-amarillo {
+            border-top: 3px solid #e7ba61;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-top navbar-default border-bottom-amarillo">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/" aria-label="Argentina.gob.ar - Presidencia de la Nación">
+                        <img src="../paginas-de-argentina/img/logo_argentina-azul.svg" alt="Argentina.gob.ar">
+                    </a>
+                    <a class="btn btn-mi-argentina btn-login visible-xs" href="https://mi.argentina.gob.ar" aria-label="Ingresar a Mi Argentina">
+                        <i class="icono-arg-mi-argentina fa-fw"></i><span class="sr-only">Ir a Mi Argentina</span>
+                    </a>
+                </div>
+                <div class="navbar-right">
+                    <a class="btn btn-primary hidden-xs" href="https://mi.argentina.gob.ar/" aria-label="Ingresar a Mi Argentina">Mi Argentina</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="jumbotron_bar">
+        <div class="container">
+            <ul>
+                <li><a href="#">Como funciona</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="container-fluid">
+            <div class="row sub-footer bg-primary border-top-amarillo">
+                <div class="container">
+                    <div class="col-sm-6 m-y-1 p-x-0">
+                        <!-- Footer content here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block javascript %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+/* General styles for form groups */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Label styles */
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Input and textarea styles */
+.form-group input,
+.form-group textarea {
+  max-width: 100%; /* Ensures they don't stretch */
+  box-sizing: border-box; /* Ensures padding and borders don't affect width */
+}
+
+/* Specific style for the IDEA field to control its size */
+textarea.form-control#id_IDEA {
+  resize: none; /* Prevents resizing */
+  width: 100%; /* Makes sure it uses available width */
+  max-width: 100%; /* Ensures it does not exceed its container's width */
+}
+</style>
+
+<div class="container">
+  <section>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h2>Crear Propuesta</h2>
+        <p>Descarga los formularios para subirlos</p>
+        <form method="post" enctype="multipart/form-data">
+          <a href="">Formulario base</a>
+          <a href="">Formulario para financiación</a>
+          {% csrf_token %}
+          {{ form.as_p }}
+          
+          <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

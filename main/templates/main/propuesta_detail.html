@@ -1,0 +1,48 @@
+<!-- obras_privadas/main/templates/main/propuesta_detail.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ propuesta.titulo }}</title>
+</head>
+<body>
+    <h1>{{ propuesta.titulo }}</h1>
+    <img src="{{ propuesta.foto_perfil.url }}" alt="Foto del proyecto">
+    <p>{{ propuesta.idea }}</p>
+    <p>Provincia: {{ propuesta.provincia }}</p>
+    <p>Municipio: {{ propuesta.municipio }}</p>
+    {% if propuesta.abarca_otra_provincia %}
+        <p>Otra Provincia: {{ propuesta.provincia2 }}</p>
+    {% endif %}
+    <a href="{{ propuesta.documento.url }}">Ver Propuesta (PDF)</a>
+    <p>Propuesta creada por: {{ propuesta.creador.username }}</p>
+    <p>Total de votos: {{ propuesta.total_votos }}</p>
+
+    {% if user.is_authenticated %}
+        {% if user not in propuesta.votos.all %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="rate">Ratear Propuesta</button>
+            </form>
+        {% else %}
+            <p>Ya has rateado esta propuesta.</p>
+        {% endif %}
+        
+        {% if user.empresa %}
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="comentario" placeholder="Escribe tu comentario"></textarea>
+                <input type="number" step="0.01" name="inversion" placeholder="Inversión propuesta">
+                <button type="submit" name="comment">Enviar Comentario</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    <h2>Comentarios</h2>
+    {% for comentario in comentarios %}
+        <div>
+            <p>{{ comentario.empresa.nombre }} comentó: {{ comentario.comentario }}</p>
+            <p>Inversión propuesta: {{ comentario.inversion }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

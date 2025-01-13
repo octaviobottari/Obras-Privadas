@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .propuesta-content {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .propuesta-text {
+        flex: 20;
+    }
+
+    .full-width-line {
+        border: none;
+        border-top: 3px solid #003366; 
+        margin-top: 15px;
+        margin-bottom: 15px;
+        width: 90%;
+    }
+
+    .short-line {
+        border: none;
+        border-top: 3px solid #e7ba61; 
+        width: 80px;
+        margin: 20px 0 0 0;
+    }
+
+    body {
+        background-color: #fff;
+    }
+
+    .addtxt {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center;
+        font-size: 13px;
+        width: 350px;
+        background-color: #e5e8ed;
+        font-weight: 500;
+    }
+
+    .form-control:focus {
+        color: #000;
+    }
+
+    .second {
+        width: 350px;
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 10px 10px 5px #aaaaaa;
+    }
+
+    .comment-textarea {
+        width: 400px; /* Adjust the width as needed */
+        resize: none; /* Prevent resizing */
+    }
+
+    .comment-container {
+        max-height: 300px; /* Adjust the height as needed */
+        overflow-y: auto; /* Enable vertical scrolling */
+        margin-bottom: 20px; /* Add margin for spacing */
+        padding: 10px;
+        border: 1px solid #003366; /* Border color */
+        border-radius: 8px; /* Rounded corners */
+        background-color: #f9f9f9; /* Background color */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    /* Comment styling */
+    .comment-box {
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        color: #ffffff; /* Default text color */
+    }
+
+    .comment-box.even {
+        background-color: #003366; /* Dark blue background */
+        color: #ffffff; /* White text color */
+    }
+
+    .comment-box.odd {
+        background-color: #ffffff; /* White background */
+        color: #000000; /* Black text color */
+    }
+
+    .text1 {
+        font-size: 13px;
+        font-weight: 500;
+        color: inherit; /* Use the inherited color */
+    }
+
+    .text2 {
+        font-size: 13px;
+        font-weight: 500;
+        margin-left: 6px;
+        color: inherit; /* Use the inherited color */
+    }
+
+    .text3 {
+        font-size: 13px;
+        font-weight: 500;
+        margin-right: 4px;
+        color: #828386;
+    }
+
+    .text3o {
+        color: #00a5f4;
+    }
+
+    .text4 {
+        font-size: 13px;
+        font-weight: 500;
+        color: #828386;
+    }
+
+    .text4i {
+        color: #00a5f4;
+    }
+
+    .text4o {
+        color: white;
+    }
+
+    .thumbup {
+        font-size: 13px;
+        font-weight: 500;
+        margin-right: 5px;
+    }
+
+    .thumbupo {
+        color: #17a2b8;
+    }
+</style>
+
+<section class="hero">
+    <div class="container">
+        <div class="propuesta-detail">
+            <h1 style="color: #003366;">{{ propuesta.TITULO }}</h1>
+            <div class="propuesta-content">
+                <img src="{{ propuesta.FOTO_DE_PERFIL_DEL_PROYECTO.url }}" alt="Profile Picture" class="propuesta-image-detail"> 
+                <div class="propuesta-text">
+                    <h3 style="color: #003366;">Descripción del Proyecto</h3>
+                    <p>{{ propuesta.IDEA }}</p>
+                    <p><i class="icono-arg-marcador-ubicacion-1"></i> Provincia: {{ propuesta.PROVINCIA }}</p>
+                    <p><i class="icono-arg-votar"></i> Votos obtuvidos:</p>
+                    <p>Positivos {{ propuesta.votos_positivos }}</p>
+                    <p>Negativos {{ propuesta.votos_negativos }}</p>
+                    <hr class="full-width-line">
+                </div>
+            </div>
+            <hr class="short-line">
+        </div>
+        <h3 style="color: #003366;"><i class="icono-arg-cotizacion-envio"></i> Empresas que quieren financiar</h3>
+
+        {% if propuesta.empresas_que_financian.exists %}
+            <ul>
+                {% for empresa in propuesta.empresas_que_financian.all %}
+                    <li>Propuesta de financiación hecha por: {{ empresa.nombre_empresa }}</li>
+                {% endfor %}
+            </ul>
+        {% elif propuesta.creador.tipo_usuario == 'empresa' %}
+            <p>Financiado por: {{ propuesta.creador.nombre_empresa }}</p>
+        {% else %}
+            <p>No hay empresas interesadas en financiar esta propuesta aún.</p>
+        {% endif %}
+
+        {% if propuesta.FORMULARIO_FINANCIAMIENTO %}
+            <a href="{{ propuesta.FORMULARIO_FINANCIAMIENTO.url }}">Ver Formulario de Financiamiento</a>
+        {% endif %}
+
+        {% if propuesta.PROPUESTA_PDF %}
+            <h3 style="color: #003366;"><i class="icono-arg-comisiones-cofefup-carpetas"></i> Documentos</h3>
+            <a href="{{ propuesta.PROPUESTA_PDF.url }}">Formulario del proyecto {{ propuesta.TITULO }}</a>
+        {% endif %}
+    </div>
+
+    <!-- Comment Section -->
+
+    <div class="container">
+        <h3 style="color: #003366;">Participación Ciudadana</h3>
+        <p>Participa escribiendo tu comentario sobre esta propuesta</p>
+        
+        <div class="comment-container">
+            {% for comment in comments %}
+                <div class="comment-box {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">
+                    <span class="text2" style="font-weight: bolder;">{{ comment.display_name }}:</span>
+                    <div class="comment-content">
+                        <span class="text1">{{ comment.comment }}</span>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No hay comentarios todavía, hace el primero!</p>
+            {% endfor %}
+        </div>
+        <form method="post" action="{% url 'propuesta_detail' propuesta.pk %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Subir comentario</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
